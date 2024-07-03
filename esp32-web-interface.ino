@@ -101,6 +101,8 @@ uint16_t blockCountSD = 0;
 File dataFile;
 int startLogAttempt = 0;
 
+uint32_t deleteOldest(uint64_t spaceRequired);
+
 bool createNextSDFile()
 {
   char filename[50];
@@ -390,7 +392,7 @@ void handleSdCardList() {
 void handleFileList() {
   String path = "/";
   if(server.hasArg("dir"))
-    String path = server.arg("dir");
+    path = server.arg("dir");
   //DBG_OUTPUT_PORT.println("handleFileList: " + path);
   File root = SPIFFS.open(path);
   String output = "[";

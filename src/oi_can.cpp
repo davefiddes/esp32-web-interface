@@ -58,13 +58,13 @@
 
 namespace OICan {
 
-enum state { IDLE, ERROR, OBTAINSERIAL, OBTAIN_JSON };
-enum updstate { UPD_IDLE, SEND_MAGIC, SEND_SIZE, SEND_PAGE, CHECK_CRC, REQUEST_JSON };
+enum State { IDLE, ERROR, OBTAINSERIAL, OBTAIN_JSON };
+enum UpdState { UPD_IDLE, SEND_MAGIC, SEND_SIZE, SEND_PAGE, CHECK_CRC, REQUEST_JSON };
 
 static uint8_t _nodeId;
 static BaudRate baudRate;
-static state state;
-static updstate updstate;
+static State state;
+static UpdState updstate;
 static uint32_t serial[4]; //contains id sum as well
 static char jsonFileName[20];
 static twai_message_t tx_frame;
