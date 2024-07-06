@@ -761,7 +761,7 @@ void binaryLoggingStart()
       uart_set_baudrate(INVERTER_PORT, 2250000);
       uart_write_bytes(INVERTER_PORT, "\n", 1);
       delay(1);
-      uart_write_bytes(INVERTER_PORT, "binarylogging 0", strnlen("binarylogging 0", UART_MESSBUF_SIZE));
+      uart_write_bytes(INVERTER_PORT, "binarylogging 0", strlen("binarylogging 0"));
       uart_write_bytes(INVERTER_PORT, "\n", 1);
       uart_wait_tx_done(INVERTER_PORT, UART_TIMEOUT);
       uart_set_baudrate(INVERTER_PORT, 115200);
@@ -775,7 +775,7 @@ void binaryLoggingStop()
 {
   uart_write_bytes(INVERTER_PORT, "\n", 1);
   delay(1);
-  uart_write_bytes(INVERTER_PORT, "binarylogging 0", strnlen("binarylogging 0", UART_MESSBUF_SIZE));
+  uart_write_bytes(INVERTER_PORT, "binarylogging 0", strlen("binarylogging 0"));
   uart_write_bytes(INVERTER_PORT, "\n", 1);
   uart_wait_tx_done(INVERTER_PORT, UART_TIMEOUT);
   uart_set_baudrate(INVERTER_PORT, 115200);
