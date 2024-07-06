@@ -657,7 +657,8 @@ void Init(uint8_t nodeId, BaudRate baud) {
         .tx_queue_len = 30,
         .rx_queue_len = 30,
         .alerts_enabled = TWAI_ALERT_NONE,
-        .clkout_divider = 0
+        .clkout_divider = 0,
+        .intr_flags = 0
   };
 
   uint16_t id = 0x580 + nodeId;
