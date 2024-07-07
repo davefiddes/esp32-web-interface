@@ -67,7 +67,6 @@ static state state;
 static updstate updstate;
 static uint32_t serial[4]; //contains id sum as well
 static char jsonFileName[20];
-static char canFileName[20];
 static twai_message_t tx_frame;
 static File updateFile;
 static int currentPage = 0;

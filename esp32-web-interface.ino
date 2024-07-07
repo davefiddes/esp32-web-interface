@@ -132,7 +132,6 @@ bool createNextSDFile()
 
 uint32_t deleteOldest(uint64_t spaceRequired)
 {
-  time_t oldestTime = 0;
   File root, file;
   String oldestFileName;
   uint64_t spaceRem;
@@ -149,7 +148,7 @@ uint32_t deleteOldest(uint64_t spaceRequired)
   {
     root = SD_MMC.open("/");
 
-    oldestTime = 0;
+    time_t oldestTime = 0;
     fileCount = 0;
     while(file = root.openNextFile())
     {
@@ -242,7 +241,7 @@ bool handleFileRead(String path){
       path += ".gz";
     File file = SPIFFS.open(path, "r");
     server.sendHeader("Cache-Control", "max-age=86400");
-    size_t sent = server.streamFile(file, contentType);
+    server.streamFile(file, contentType);
     file.close();
     return true;
   }
@@ -255,7 +254,7 @@ bool handleFileRead(String path){
 
     if (SD_MMC.exists(path)) {
       File file = SD_MMC.open(path, "r");
-      size_t sent = server.streamFile(file, contentType);
+      server.streamFile(file, contentType);
       file.close();
     return true;
     }
@@ -343,16 +342,13 @@ void handleRTCSet() {
 void handleSdCardDeleteAll() {
     if (haveSDCard) {
       File root, file;
-      if (haveSDCard) {
-        root = SD_MMC.open("/");
-        while(file = root.openNextFile())
-        {
-          String filename = file.name();
-          if(SD_MMC.remove("/" + filename))
-            DBG_OUTPUT_PORT.println("Deleted file: " + filename);
-          else
-            DBG_OUTPUT_PORT.println("Couldn't delete: " + filename);
-          }
+      root = SD_MMC.open("/");
+      while(file = root.openNextFile()) {
+        String filename = file.name();
+        if(SD_MMC.remove("/" + filename))
+          DBG_OUTPUT_PORT.println("Deleted file: " + filename);
+        else
+          DBG_OUTPUT_PORT.println("Couldn't delete: " + filename);
       }
     }
 
@@ -407,7 +403,6 @@ void handleFileList() {
   File file = root.openNextFile();
   while(file){
     if (output != "[") output += ',';
-    bool isDir = false;
     output += "{\"type\":\"";
     output += file.isDirectory()?"dir":"file";
     output += "\",\"name\":\"";
@@ -464,7 +459,6 @@ static void sendCommand(String cmd)
 }
 
 static void handleCommand() {
-  const int cmdBufSize = 128;
   if(!server.hasArg("cmd")) {server.send(500, "text/plain", "BAD ARGS"); return;}
 
   String cmd = server.arg("cmd");
@@ -609,7 +603,7 @@ static void handleWifi()
   if (updated)
   {
     File file = SPIFFS.open("/wifi-updated.html", "r");
-    size_t sent = server.streamFile(file, getContentType("wifi-updated.html"));
+    server.streamFile(file, getContentType("wifi-updated.html"));
     file.close();
   }
 }
@@ -803,8 +797,6 @@ void binaryLoggingStop()
 }
 
 void loop(void){
-  static int subIndex = 0;
-  static uint32_t serial[4];
   // note: ArduinoOTA.handle() calls MDNS.update();
   server.handleClient();
   ArduinoOTA.handle();
