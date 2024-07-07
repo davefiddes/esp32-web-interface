@@ -149,8 +149,8 @@ static void handleSdoResponse(twai_message_t *rxframe) {
           requestSdoElement(SDO_INDEX_SERIAL, rxframe->data[3] + 1);
         }
         else {
-          sprintf(jsonFileName, "/%x.json", serial[3]);
-          DBG_OUTPUT_PORT.printf("Got Serial Number %X:%X:%X:%X\r\n", serial[0], serial[1], serial[2], serial[3]);
+          sprintf(jsonFileName, "/%" PRIx32 ".json", serial[3]);
+          DBG_OUTPUT_PORT.printf("Got Serial Number %" PRIX32 ":%" PRIX32 ":%" PRIX32 ":%" PRIX32 "\r\n", serial[0], serial[1], serial[2], serial[3]);
 
           if (SPIFFS.exists(jsonFileName)) {
             state = IDLE;
@@ -226,7 +226,7 @@ static void handleUpdate(twai_message_t *rxframe) {
         tx_frame.data[2] = rxframe->data[6];
         tx_frame.data[3] = rxframe->data[7];
         updstate = SEND_SIZE;
-        DBG_OUTPUT_PORT.printf("Sending ID %u\r\n", *(uint32_t*)tx_frame.data);
+        DBG_OUTPUT_PORT.printf("Sending ID %" PRIu32 "\r\n", *(uint32_t*)tx_frame.data);
         twai_transmit(&tx_frame, pdMS_TO_TICKS(10));
       }
       break;
@@ -718,7 +718,7 @@ void Loop() {
     else if (rxframe.identifier == 0x7de)
       handleUpdate(&rxframe);
     else
-      DBG_OUTPUT_PORT.printf("Received unwanted frame %u\r\n", rxframe.identifier);
+      DBG_OUTPUT_PORT.printf("Received unwanted frame %" PRIu32 "\r\n", rxframe.identifier);
   }
 
   if (updstate == REQUEST_JSON) {

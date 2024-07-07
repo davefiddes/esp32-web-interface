@@ -115,9 +115,9 @@ bool createNextSDFile()
   do
   {
     if(haveRTC)
-      snprintf(filename, 50, "/%d-%02d-%02d-%02d-%02d-%02d_%d.bin", int_rtc.getYear(), int_rtc.getMonth(), int_rtc.getDay(), int_rtc.getHour(), int_rtc.getMinute(), int_rtc.getSecond(), nextFileIndex++);
+      snprintf(filename, 50, "/%d-%02d-%02d-%02d-%02d-%02d_%" PRIu32 ".bin", int_rtc.getYear(), int_rtc.getMonth(), int_rtc.getDay(), int_rtc.getHour(), int_rtc.getMinute(), int_rtc.getSecond(), nextFileIndex++);
     else
-      snprintf(filename, 50, "/%010d.bin", nextFileIndex++);
+      snprintf(filename, 50, "/%010" PRIu32 ".bin", nextFileIndex++);
   }
   while(SD_MMC.exists(filename));
 
