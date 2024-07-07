@@ -102,10 +102,6 @@ static void setValueSdo(uint16_t index, uint8_t subIndex, uint32_t value) {
   twai_transmit(&tx_frame, pdMS_TO_TICKS(10));
 }
 
-static void setValueSdo(uint16_t index, uint8_t subIndex, double value) {
-  setValueSdo(index, subIndex, (uint32_t)(value * 32));
-}
-
 static int getId(String name) {
   DynamicJsonDocument doc(300);
   StaticJsonDocument<200> filter;
@@ -554,7 +550,7 @@ SetResult SetValue(String name, double value) {
 
   int id = getId(name);
 
-  setValueSdo(SDO_INDEX_PARAM_UID | (id >> 8), id & 0xFF, value);
+  setValueSdo(SDO_INDEX_PARAM_UID | (id >> 8), id & 0xFF, (uint32_t)(value * 32));
 
   if (twai_receive(&rxframe, pdMS_TO_TICKS(10)) == ESP_OK) {
     if (rxframe.data[0] == SDO_RESPONSE_DOWNLOAD)
