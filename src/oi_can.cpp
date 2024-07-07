@@ -190,6 +190,12 @@ static void handleSdoResponse(twai_message_t *rxframe) {
       }
 
       break;
+    case ERROR:
+      // Do not exit this state
+      break;
+    case IDLE:
+      // Do not exit this state
+      break;
   }
 }
 
@@ -308,6 +314,12 @@ static void handleUpdate(twai_message_t *rxframe) {
         DBG_OUTPUT_PORT.printf("Done!\r\n");
       }
       break;
+    case REQUEST_JSON:
+      // Do not exit this state
+      break;
+    case UPD_IDLE:
+      // Do not exit this state
+      break;
   }
 
 }
@@ -337,7 +349,7 @@ bool SendJson(WiFiClient client) {
 
   if (result != DeserializationError::Ok) {
     SPIFFS.remove(jsonFileName); //if json file is invalid, remove it and trigger re-download
-    updstate == REQUEST_JSON;
+    updstate = REQUEST_JSON;
     retries = 50;
     DBG_OUTPUT_PORT.println("JSON file invalid, re-downloading");
     return false;
@@ -371,7 +383,7 @@ void SendCanMapping(WiFiClient client) {
 
   twai_message_t rxframe;
   int index = SDO_INDEX_MAP_RD, subIndex = 0;
-  int cobid, pos, len, paramid;
+  int cobid = 0, pos = 0, len = 0, paramid = 0;
   bool rx = false;
   String result;
   ReqMapStt reqMapStt = START;
@@ -383,6 +395,10 @@ void SendCanMapping(WiFiClient client) {
     case START:
       requestSdoElement(index, 0); //request COB ID
       reqMapStt = COBID;
+      cobid = 0;
+      pos = 0;
+      len = 0;
+      paramid = 0;
       break;
     case COBID:
       if (twai_receive(&rxframe, pdMS_TO_TICKS(10)) == ESP_OK) {
