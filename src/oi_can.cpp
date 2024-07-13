@@ -103,8 +103,8 @@ static void setValueSdo(uint16_t index, uint8_t subIndex, uint32_t value) {
 }
 
 static int getId(String name) {
-  DynamicJsonDocument doc(300);
-  StaticJsonDocument<200> filter;
+  JsonDocument doc;
+  JsonDocument filter;
 
   File file = SPIFFS.open(jsonFileName, "r");
   filter[name]["id"] = true;
@@ -336,7 +336,7 @@ int GetCurrentUpdatePage() {
 bool SendJson(WiFiClient client) {
   if (state != IDLE) return false;
 
-  DynamicJsonDocument doc(50000);
+  JsonDocument doc;
   twai_message_t rxframe;
 
   File file = SPIFFS.open(jsonFileName, "r");
@@ -384,7 +384,7 @@ void SendCanMapping(WiFiClient client) {
   String result;
   ReqMapStt reqMapStt = START;
 
-  DynamicJsonDocument doc(16384);
+  JsonDocument doc;
 
   while (DONE != reqMapStt) {
     switch (reqMapStt) {
@@ -443,7 +443,7 @@ void SendCanMapping(WiFiClient client) {
           gain /= 1000;
           int offset = (int8_t)rxframe.data[7];
           DBG_OUTPUT_PORT.printf("can %s %d %d %d %d %f %d\r\n", rx ? "rx" : "tx", paramid, cobid, pos, len, gain, offset);
-          StaticJsonDocument<200> subdoc;
+          JsonDocument subdoc;
           JsonObject object = subdoc.to<JsonObject>();
           object["isrx"] = rx;
           object["id"] = cobid;
@@ -477,7 +477,7 @@ void SendCanMapping(WiFiClient client) {
 SetResult AddCanMapping(String json) {
   if (state != IDLE) return CommError;
 
-  StaticJsonDocument<256> doc;
+  JsonDocument doc;
   twai_message_t rxframe;
 
   deserializeJson(doc, json);
@@ -516,7 +516,7 @@ SetResult AddCanMapping(String json) {
 SetResult RemoveCanMapping(String json){
   if (state != IDLE) return CommError;
 
-  StaticJsonDocument<256> doc;
+  JsonDocument doc;
   twai_message_t rxframe;
 
   deserializeJson(doc, json);
